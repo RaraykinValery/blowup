@@ -22,8 +22,14 @@ func main() {
 	tpl = views.Must(views.ParseFS(templates.FS, "layout_page.gohtml", "faq.gohtml", "layout_parts.gohtml"))
 	r.Get("/faq", controllers.FAQ(tpl))
 
-	tpl = views.Must(views.ParseFS(templates.FS, "layout_page.gohtml", "signup.gohtml", "layout_parts.gohtml"))
-	r.Get("/signup", controllers.FAQ(tpl))
+	usersC := controllers.Users{}
+	usersC.Templates.New = views.Must(
+		views.ParseFS(templates.FS,
+			"layout_page.gohtml",
+			"signup.gohtml",
+			"layout_parts.gohtml"),
+	)
+	r.Get("/signup", usersC.New)
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Not Found", http.StatusNotFound)
